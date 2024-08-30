@@ -1,10 +1,9 @@
-import "./App.css";
-import { Button } from "@/components/ui/button";
+import { HomePage } from "./pages/homePage";
 
 function App() {
   return (
-    <div className="">
-      <Button>OI</Button>
+    <div>
+      <HomePage />
     </div>
   );
 }
