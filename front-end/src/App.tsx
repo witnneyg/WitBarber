@@ -1,9 +1,11 @@
-import { HomePage } from "./pages/homePage";
+import { Outlet } from "react-router-dom";
+import { Header } from "./components/header";
 
 function App() {
   return (
-    <div>
-      <HomePage />
+    <div className="flex flex-col h-screen">
+      <Header />
+      <Outlet />
     </div>
   );
 }
