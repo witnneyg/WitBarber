@@ -1,9 +1,13 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec npx ts-node src/index.ts"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -11,7 +15,6 @@
   "description": "",
   "devDependencies": {
     "nodemon": "^3.1.4",
-    "ntypescript": "^1.201706190042.1",
     "prisma": "^5.19.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
