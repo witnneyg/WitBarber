@@ -6,7 +6,7 @@ export function Header() {
   return (
     <Card>
       <CardContent className="flex justify-between items-start">
-        <img src="" alt="FSW Barber logo" height={18} width={120} />
+        <img src={""} alt="FSW Barber logo" height={18} width={120} />
         <Button className="icon" variant="outline">
           <MenuIcon />
         </Button>

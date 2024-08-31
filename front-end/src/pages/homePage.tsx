@@ -1,12 +1,12 @@
 import { BarberShopItem } from "@/components/barbershop-item";
 import { BookingItem } from "@/components/booking-item";
-import { AvatarImage, Avatar } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { quickSearchOptions } from "@/constants/search";
 import { SearchIcon } from "lucide-react";
+
+import barberBanner from "../assets/barber-banner.png";
 
 export function HomePage() {
   return (
@@ -37,7 +37,7 @@ export function HomePage() {
 
       <div className="relative h-[150px] w-full mt-6 ">
         <img
-          src=""
+          src={barberBanner}
           alt="Agende nos melhorescom FSW Barber"
           className="object-cover rounded-xl"
         />
