@@ -26,6 +26,10 @@ export function HomePage() {
         />
       </div>
 
+      <h2 className="uppercase text-gray-400 font-bold text-xs mt-6 mb-3">
+        Agendamentos
+      </h2>
+
       <Card>
         <CardContent className="flex justify-between p-0">
           <div className="flex flex-col gap-2 py-5 pl-5">
