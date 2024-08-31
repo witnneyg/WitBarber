@@ -1,3 +1,4 @@
+import { BarberShopItem } from "@/components/barbershop-item";
 import { AvatarImage, Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,17 @@ export function HomePage() {
           </div>
         </CardContent>
       </Card>
+
+      <h2 className="uppercase text-gray-400 font-bold text-xs mt-6 mb-3">
+        Recomendados
+      </h2>
+
+      <div className="flex gap-4 overflow-auto [&::webkit-scrollbar]:hidden">
+        <BarberShopItem />
+        <BarberShopItem />
+        <BarberShopItem />
+        <BarberShopItem />
+      </div>
     </div>
   );
 }
