@@ -1,27 +1,62 @@
 import { BarberShopItem } from "@/components/barbershop-item";
 import { BookingItem } from "@/components/booking-item";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
 import { quickSearchOptions } from "@/constants/search";
-import { SearchIcon } from "lucide-react";
 
 import barberBanner from "../assets/barber-banner.png";
+import { useEffect, useState } from "react";
+import { api } from "@/services/api";
+import { Title } from "@/components/title";
+import { SearchInput } from "@/components/search";
+
+interface Booking {
+  id: string;
+  date: Date;
+}
+
+interface BarberShopServices {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  bookings: Booking[];
+}
+interface BarberShop {
+  id: string;
+  name: string;
+  address: string;
+  phones: string[];
+  description: string;
+  imageUrl: string;
+  services: BarberShopServices[];
+}
 
 export function HomePage() {
+  const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
+
+  useEffect(() => {
+    async function getAllBarbeshop() {
+      try {
+        const res = await api.get("/barbershop");
+        setBarberShops(res.data);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    }
+
+    getAllBarbeshop();
+  }, [barberShops]);
+
   return (
     <div className="p-5">
       <h2 className="text-xl font-bold">Olá, Lennzy!</h2>
       <p>Segunda-feira, 05 de agosto.</p>
 
-      <div className="mt-6 flex items-center gap-2">
-        <Input placeholder="Faça sua busca..." />
-        <Button>
-          <SearchIcon />
-        </Button>
-      </div>
+      <SearchInput />
 
-      <div className="flex gap-3 my-6 overflow-x-scroll [&::webkit-scrollbar]:hidden">
+      <div className="flex gap-3 my-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
         {quickSearchOptions.map((option) => (
           <Button className="gap-2" variant="secondary" key={option.title}>
             <img
@@ -43,43 +78,30 @@ export function HomePage() {
         />
       </div>
 
-      <h2 className="uppercase text-gray-400 font-bold text-xs mt-6 mb-3">
-        Agendamentos
-      </h2>
+      <Title name="Agendamentos" />
 
       <BookingItem />
 
-      <h2 className="uppercase text-gray-400 font-bold text-xs mt-6 mb-3">
-        Recomendados
-      </h2>
+      <Title name="Recomendados" />
 
-      <div className="flex gap-4 overflow-auto [&::webkit-scrollbar]:hidden">
-        <BarberShopItem />
-        <BarberShopItem />
-        <BarberShopItem />
-        <BarberShopItem />
+      <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+        {barberShops.map(({ name, address, imageUrl }) => (
+          <BarberShopItem address={address} imageUrl={imageUrl} name={name} />
+        ))}
       </div>
 
-      <h2 className="uppercase text-gray-400 font-bold text-xs mt-6 mb-3">
-        Populares
-      </h2>
+      <Title name="Populares" />
 
-      <div className="flex gap-4 overflow-auto [&::webkit-scrollbar]:hidden">
-        <BarberShopItem />
-        <BarberShopItem />
-        <BarberShopItem />
-        <BarberShopItem />
+      <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden mb-10">
+        {barberShops.map(({ name, address, imageUrl, id }) => (
+          <BarberShopItem
+            address={address}
+            imageUrl={imageUrl}
+            name={name}
+            key={id}
+          />
+        ))}
       </div>
-
-      <footer>
-        <Card>
-          <CardContent className="px-5 py-6">
-            <p className="text-sm text-gray-400">
-              2024 Copyright <span className="font-bold">FSW</span> Barber
-            </p>
-          </CardContent>
-        </Card>
-      </footer>
     </div>
   );
 }

@@ -3,14 +3,22 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 
-interface BarbershopItemsProps {}
+interface BarberShopItemProps {
+  name: string;
+  imageUrl: string;
+  address: string;
+}
 
-export function BarberShopItem() {
+export function BarberShopItem({
+  name,
+  imageUrl,
+  address,
+}: BarberShopItemProps) {
   return (
     <Card className="min-w-[167px] rounded-2xl">
       <CardContent className="p-0 px-1 pt-1 pb-2">
         <div className="relative h-[159px] w-full">
-          <img src="" alt="" className="bg-cover rounded-2xl" />
+          <img src={imageUrl} alt={name} className="bg-cover rounded-2xl" />
 
           <Badge
             className="absolute left-2 top-2 space-x-1"
@@ -22,8 +30,8 @@ export function BarberShopItem() {
         </div>
 
         <div className="py-3 px-1">
-          <h3 className="font-semibold truncate">nome</h3>
-          <p className="text-sm text-gray-400 truncate">address</p>
+          <h3 className="font-semibold truncate">{name}</h3>
+          <p className="text-sm text-gray-400 truncate">{address}</p>
           <Button variant={"secondary"} className="mt-3 w-full">
             Reservar
           </Button>
