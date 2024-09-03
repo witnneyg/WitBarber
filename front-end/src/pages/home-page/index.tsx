@@ -1,37 +1,13 @@
 import { BarberShopItem } from "@/components/barbershop-item";
 import { BookingItem } from "@/components/booking-item";
 import { Button } from "@/components/ui/button";
-
 import { quickSearchOptions } from "@/constants/search";
-
-import barberBanner from "../assets/barber-banner.png";
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { Title } from "@/components/title";
 import { SearchInput } from "@/components/search";
-
-interface Booking {
-  id: string;
-  date: Date;
-}
-
-interface BarberShopServices {
-  id: string;
-  name: string;
-  description: string;
-  imageUrl: string;
-  price: number;
-  bookings: Booking[];
-}
-interface BarberShop {
-  id: string;
-  name: string;
-  address: string;
-  phones: string[];
-  description: string;
-  imageUrl: string;
-  services: BarberShopServices[];
-}
+import { BarberShop } from "@/models/barbershop-interfaces";
+import barberBanner from "../../assets/barber-banner.png";
 
 export function HomePage() {
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
@@ -85,8 +61,14 @@ export function HomePage() {
       <Title name="Recomendados" />
 
       <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-        {barberShops.map(({ name, address, imageUrl }) => (
-          <BarberShopItem address={address} imageUrl={imageUrl} name={name} />
+        {barberShops.map(({ name, address, imageUrl, id }) => (
+          <BarberShopItem
+            id={id}
+            key={id}
+            address={address}
+            imageUrl={imageUrl}
+            name={name}
+          />
         ))}
       </div>
 
@@ -95,10 +77,11 @@ export function HomePage() {
       <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden mb-10">
         {barberShops.map(({ name, address, imageUrl, id }) => (
           <BarberShopItem
+            id={id}
+            key={id}
             address={address}
             imageUrl={imageUrl}
             name={name}
-            key={id}
           />
         ))}
       </div>
