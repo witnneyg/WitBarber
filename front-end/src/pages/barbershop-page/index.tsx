@@ -1,3 +1,4 @@
+import { PhoneItem } from "@/components/phone-item";
 import { ServiceItem } from "@/components/service-item";
 import { Button } from "@/components/ui/button";
 import { BarberShop } from "@/models/barbershop-interfaces";
@@ -26,7 +27,7 @@ export function BarbershopPage() {
   }, []);
 
   return (
-    <div className="mt-14">
+    <div>
       <div className="relative h-[250px] w-full">
         <img
           src={barbershop?.imageUrl}
@@ -71,13 +72,19 @@ export function BarbershopPage() {
         <p className="text-sm text-justify">{barbershop?.description}</p>
       </div>
 
-      <div className="p-5 space-y-3">
+      <div className="p-5 space-y-3 border-b border-solid">
         <h2 className="font-bold uppercase text-gray-400 text-xs">Serviços</h2>
         <div className="space-y-3">
           {barbershop?.services.map((service) => (
             <ServiceItem key={service.id} service={service} />
           ))}
         </div>
+      </div>
+
+      <div className="p-5 space-y-3">
+        {barbershop?.phones.map((phone) => (
+          <PhoneItem key={phone} phone={phone} />
+        ))}
       </div>
     </div>
   );
