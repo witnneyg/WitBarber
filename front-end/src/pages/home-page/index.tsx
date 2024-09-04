@@ -8,6 +8,7 @@ import { Title } from "@/components/title";
 import { SearchInput } from "@/components/search";
 import { BarberShop } from "@/models/barbershop-interfaces";
 import barberBanner from "../../assets/barber-banner.png";
+import { Header } from "@/components/header";
 
 export function HomePage() {
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
@@ -26,65 +27,68 @@ export function HomePage() {
   }, [barberShops]);
 
   return (
-    <div className="p-5">
-      <h2 className="text-xl font-bold">Olá, Lennzy!</h2>
-      <p>Segunda-feira, 05 de agosto.</p>
+    <>
+      <Header />
+      <div className="p-5">
+        <h2 className="text-xl font-bold">Olá, Lennzy!</h2>
+        <p>Segunda-feira, 05 de agosto.</p>
 
-      <SearchInput />
+        <SearchInput />
 
-      <div className="flex gap-3 my-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
-        {quickSearchOptions.map((option) => (
-          <Button className="gap-2" variant="secondary" key={option.title}>
-            <img
-              src={option.imageUrl}
-              alt="Cabelo icon"
-              width={16}
-              height={16}
+        <div className="flex gap-3 my-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+          {quickSearchOptions.map((option) => (
+            <Button className="gap-2" variant="secondary" key={option.title}>
+              <img
+                src={option.imageUrl}
+                alt="Cabelo icon"
+                width={16}
+                height={16}
+              />
+              {option.title}
+            </Button>
+          ))}
+        </div>
+
+        <div className="relative h-[150px] w-full mt-6 ">
+          <img
+            src={barberBanner}
+            alt="Agende nos melhorescom FSW Barber"
+            className="object-cover rounded-xl"
+          />
+        </div>
+
+        <Title name="Agendamentos" />
+
+        <BookingItem />
+
+        <Title name="Recomendados" />
+
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
+          {barberShops.map(({ name, address, imageUrl, id }) => (
+            <BarberShopItem
+              id={id}
+              key={id}
+              address={address}
+              imageUrl={imageUrl}
+              name={name}
             />
-            {option.title}
-          </Button>
-        ))}
+          ))}
+        </div>
+
+        <Title name="Populares" />
+
+        <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden mb-10">
+          {barberShops.map(({ name, address, imageUrl, id }) => (
+            <BarberShopItem
+              id={id}
+              key={id}
+              address={address}
+              imageUrl={imageUrl}
+              name={name}
+            />
+          ))}
+        </div>
       </div>
-
-      <div className="relative h-[150px] w-full mt-6 ">
-        <img
-          src={barberBanner}
-          alt="Agende nos melhorescom FSW Barber"
-          className="object-cover rounded-xl"
-        />
-      </div>
-
-      <Title name="Agendamentos" />
-
-      <BookingItem />
-
-      <Title name="Recomendados" />
-
-      <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-        {barberShops.map(({ name, address, imageUrl, id }) => (
-          <BarberShopItem
-            id={id}
-            key={id}
-            address={address}
-            imageUrl={imageUrl}
-            name={name}
-          />
-        ))}
-      </div>
-
-      <Title name="Populares" />
-
-      <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden mb-10">
-        {barberShops.map(({ name, address, imageUrl, id }) => (
-          <BarberShopItem
-            id={id}
-            key={id}
-            address={address}
-            imageUrl={imageUrl}
-            name={name}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
