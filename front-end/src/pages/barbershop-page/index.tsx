@@ -1,6 +1,8 @@
 import { PhoneItem } from "@/components/phone-item";
 import { ServiceItem } from "@/components/service-item";
+import { SidebarSheet } from "@/components/sidebar-sheet";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { BarberShop } from "@/models/barbershop-interfaces";
 import { api } from "@/services/api";
 import { ChevronLeftIcon, MapPinIcon, MenuIcon, StarIcon } from "lucide-react";
@@ -45,13 +47,18 @@ export function BarbershopPage() {
           </Link>
         </Button>
 
-        <Button
-          size="icon"
-          variant="secondary"
-          className="absolute right-4 top-4"
-        >
-          <MenuIcon />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              size="icon"
+              variant="outline"
+              className="absolute right-4 top-4 "
+            >
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SidebarSheet />
+        </Sheet>
       </div>
 
       <div className="border-b border-solid p-5">
