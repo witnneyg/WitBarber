@@ -1,3 +1,4 @@
+import { ServiceItem } from "@/components/service-item";
 import { Button } from "@/components/ui/button";
 import { BarberShop } from "@/models/barbershop-interfaces";
 import { api } from "@/services/api";
@@ -68,6 +69,15 @@ export function BarbershopPage() {
       <div className="p-5 border-b border-solid space-y-2">
         <h2 className="font-bold uppercase text-gray-400 text-xs">Sobre nós</h2>
         <p className="text-sm text-justify">{barbershop?.description}</p>
+      </div>
+
+      <div className="p-5 space-y-3">
+        <h2 className="font-bold uppercase text-gray-400 text-xs">Serviços</h2>
+        <div className="space-y-3">
+          {barbershop?.services.map((service) => (
+            <ServiceItem key={service.id} service={service} />
+          ))}
+        </div>
       </div>
     </div>
   );
