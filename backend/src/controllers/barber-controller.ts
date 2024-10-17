@@ -10,7 +10,7 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     const barber = await getAllBarbershop();
 
-    res.status(200).send(barber);
+    res.status(200).json(barber);
   } catch (error: any) {
     if (error.message) {
       return res.status(404).json({ error: "Nenhnuma barbearia encontrada." });
