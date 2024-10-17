@@ -5,7 +5,7 @@ import { quickSearchOptions } from "@/constants/search";
 import { useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { Title } from "@/components/title";
-import { SearchInput } from "@/components/search";
+import { Search } from "@/components/search";
 import { BarberShop } from "@/models/barbershop-interfaces";
 import barberBanner from "../../assets/barber-banner.png";
 import { Header } from "@/components/header";
@@ -33,7 +33,9 @@ export function HomePage() {
         <h2 className="text-xl font-bold">Olá, Lennzy!</h2>
         <p>Segunda-feira, 05 de agosto.</p>
 
-        <SearchInput />
+        <div className="mt-6">
+          <Search />
+        </div>
 
         <div className="flex gap-3 my-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((option) => (

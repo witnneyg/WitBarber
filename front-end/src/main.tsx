@@ -7,6 +7,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { BarbershopPage } from "./pages/barbershop-page/index.tsx";
 import { Toaster } from "sonner";
+import { BarbershopsPage } from "./pages/barbershops-page/index.tsx";
 
 document.documentElement.classList.add("dark");
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/barbershop/:id",
         element: <BarbershopPage />,
+      },
+      {
+        path: "/barbershops",
+        element: <BarbershopsPage />,
       },
     ],
   },
