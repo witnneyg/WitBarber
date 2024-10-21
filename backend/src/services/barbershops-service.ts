@@ -1,14 +1,37 @@
 import { PrismaClient } from "@prisma/client";
 
+interface searchQueryProps {
+  title?: string;
+  service?: string;
+}
+
 const prisma = new PrismaClient();
 
-export async function getBarbershopsSearch(query: string) {
+export async function getBarbershopsSearch(searchQuery: searchQueryProps) {
   const barbershopsSearch = await prisma.barberShop.findMany({
     where: {
-      name: {
-        contains: query,
-        mode: "insensitive",
-      },
+      OR: [
+        searchQuery.title
+          ? {
+              name: {
+                contains: searchQuery.title,
+                mode: "insensitive",
+              },
+            }
+          : {},
+        searchQuery.service
+          ? {
+              services: {
+                some: {
+                  name: {
+                    contains: searchQuery.service,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            }
+          : {},
+      ],
     },
   });
 

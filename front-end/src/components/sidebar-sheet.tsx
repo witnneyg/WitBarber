@@ -82,14 +82,18 @@ export function SidebarSheet() {
 
       <div className="py-5 flex flex-col gap-2 border-b border-solid">
         {quickSearchOptions.map((option) => (
-          <Button
-            key={option.title}
-            className="gap-2 justify-start"
-            variant="ghost"
-          >
-            <img src={option.imageUrl} alt={option.title} />
-            {option.title}
-          </Button>
+          <SheetClose key={option.title} asChild>
+            <Link to={`/barbershops?service=${option.title}`}>
+              <Button
+                key={option.title}
+                className="gap-2 justify-start"
+                variant="ghost"
+              >
+                <img src={option.imageUrl} alt={option.title} />
+                {option.title}
+              </Button>
+            </Link>
+          </SheetClose>
         ))}
       </div>
 

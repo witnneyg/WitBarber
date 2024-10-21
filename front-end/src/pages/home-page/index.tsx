@@ -9,6 +9,7 @@ import { Search } from "@/components/search";
 import { BarberShop } from "@/models/barbershop-interfaces";
 import barberBanner from "../../assets/barber-banner.png";
 import { Header } from "@/components/header";
+import { Link } from "react-router-dom";
 
 export function HomePage() {
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
@@ -39,15 +40,17 @@ export function HomePage() {
 
         <div className="flex gap-3 my-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((option) => (
-            <Button className="gap-2" variant="secondary" key={option.title}>
-              <img
-                src={option.imageUrl}
-                alt="Cabelo icon"
-                width={16}
-                height={16}
-              />
-              {option.title}
-            </Button>
+            <Link to={`barbershops?service=${option.title}`}>
+              <Button className="gap-2" variant="secondary" key={option.title}>
+                <img
+                  src={option.imageUrl}
+                  alt="Cabelo icon"
+                  width={16}
+                  height={16}
+                />
+                {option.title}
+              </Button>
+            </Link>
           ))}
         </div>
 

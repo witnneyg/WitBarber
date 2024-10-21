@@ -1,5 +1,8 @@
+import { BarberShopItem } from "@/components/barbershop-item";
 import { Header } from "@/components/header";
 import { Search } from "@/components/search";
+import { api } from "@/services/api";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 interface searchParams {
@@ -7,17 +10,44 @@ interface searchParams {
   service: string | undefined;
 }
 
+interface BarberShopItemProps {
+  id: string;
+  name: string;
+  imageUrl: string;
+  address: string;
+}
+
 export function BarbershopsPage() {
+  const [barbershops, setBarbershops] = useState<BarberShopItemProps[]>();
   const [searchParams] = useSearchParams();
 
-  console.log({ searchParams });
-
-  const searchQuery: searchParams = {
-    title: searchParams.get("title") || undefined,
-    service: searchParams.get("service") || undefined,
-  };
+  const searchQuery: searchParams = useMemo(
+    () => ({
+      title: searchParams.get("title") || undefined,
+      service: searchParams.get("service") || undefined,
+    }),
+    [searchParams]
+  );
 
   console.log({ searchQuery });
+
+  useEffect(() => {
+    async function getBarbershopSearch() {
+      try {
+        const res = await api.get(`/barbershops`, {
+          params: {
+            title: searchQuery.title,
+            service: searchQuery.service,
+          },
+        });
+        setBarbershops(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getBarbershopSearch();
+  }, [searchQuery]);
 
   return (
     <div>
@@ -32,9 +62,16 @@ export function BarbershopsPage() {
           &quot;
         </h2>
         <div className="grid grid-cols-2 gap-4">
-          {/* {barbershops.map((barbershop) => (
-            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
-          ))} */}
+          {barbershops &&
+            barbershops!.map((barbershop) => (
+              <BarberShopItem
+                id={barbershop.id}
+                key={barbershop.id}
+                name={barbershop.name}
+                address={barbershop.address}
+                imageUrl={barbershop.imageUrl}
+              />
+            ))}
         </div>
       </div>
     </div>

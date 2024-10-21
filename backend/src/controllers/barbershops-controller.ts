@@ -3,16 +3,29 @@ import { getBarbershopsSearch } from "../services/barbershops-service";
 
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
-  const { query } = req.query;
+interface searchQuery {
+  title: string;
+  service: string;
+}
 
-  if (!query) {
-    return res.status(400).json({ message: "Query param is required " });
+router.get("/", async (req: Request, res: Response) => {
+  const searchQuery = {
+    title: req.query.title,
+    service: req.query.service,
+  };
+
+  if (!searchQuery) {
+    return res.status(400).json({ message: "Search query param is required " });
   }
 
-  const barbershops = await getBarbershopsSearch(query as string);
-
-  res.status(200).json(barbershops);
+  try {
+    const barbershops = await getBarbershopsSearch(
+      searchQuery as unknown as searchQuery
+    );
+    res.status(200).json(barbershops);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 export default router;
