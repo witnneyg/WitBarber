@@ -21,6 +21,7 @@ import {
 import { Dialog, DialogContent } from "./ui/dialog";
 import { SignInDialog } from "./sign-in-dialog";
 import { BookingSummary } from "./booking-summary";
+import { api } from "@/services/api";
 
 interface ServiceItemProps {
   service: BarberShopServices;
@@ -91,10 +92,14 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
   useEffect(() => {
     const fetch = async () => {
       if (!selectedDay) return;
-      // const bookings = await getBookings({
-      //   date: selectedDay,
-      //   serviceId: service.id,
-      // });
+      const bookings = await api.get("booking", {
+        params: {
+          date: selectedDay,
+          serviceId: service.id,
+        },
+      });
+
+      console.log({ bookings });
       // setDayBookings(bookings);
     };
     fetch();
@@ -133,10 +138,12 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
   const handleCreateBooking = async () => {
     try {
       if (!selectedDate) return;
-      // await createBooking({
-      //   serviceId: service.id,
-      //   date: selectedDate,
-      // });
+
+      await api.post("/booking", {
+        serviceId: service.id,
+        date: selectedDate,
+      });
+
       handleBookingSheetOpenChange();
       toast.success("Reserva criada com sucesso!");
     } catch (error) {
