@@ -3,13 +3,18 @@ import { endOfDay, startOfDay } from "date-fns";
 
 const prisma = new PrismaClient();
 
-interface BookingProps {
+interface CreateBookingProps {
+  serviceId: string;
+  date: Date;
+  userId: string;
+}
+interface GetBookingProps {
   serviceId: string;
   date: Date;
 }
 
-export function getBooking({ date }: BookingProps) {
-  return prisma.booking.findMany({
+export async function getBooking({ date }: GetBookingProps) {
+  return await prisma.booking.findMany({
     where: {
       date: {
         lte: endOfDay(date),
@@ -19,11 +24,11 @@ export function getBooking({ date }: BookingProps) {
   });
 }
 
-export function createBooking(params: BookingProps) {
-  return prisma.booking.create({
+export async function createBooking(params: CreateBookingProps) {
+  return await prisma.booking.create({
     data: {
       ...params,
-      userId: "hard-code",
+      userId: params.userId,
     },
   });
 }

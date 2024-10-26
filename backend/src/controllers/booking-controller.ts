@@ -4,7 +4,7 @@ import { createBooking, getBooking } from "../services/booking-service";
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  const { serviceId, date } = req.body;
+  const { serviceId, date } = req.query as any;
 
   const booking = await getBooking({ serviceId, date });
 
@@ -16,10 +16,9 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 router.post("/", async (req: Request, res: Response) => {
-  const { serviceId, date } = req.body;
-  console.log(req.body);
+  const { serviceId, date, userId } = req.body;
 
-  const booking = await createBooking({ serviceId, date });
+  const booking = await createBooking({ serviceId, date, userId });
 
   res.status(201).json(booking);
 });
