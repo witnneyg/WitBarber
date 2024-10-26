@@ -8,6 +8,7 @@ import "./index.css";
 import { BarbershopPage } from "./pages/barbershop-page/index.tsx";
 import { Toaster } from "sonner";
 import { BarbershopsPage } from "./pages/barbershops-page/index.tsx";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 document.documentElement.classList.add("dark");
 
@@ -34,7 +35,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Toaster />
-    <RouterProvider router={router} />
+    <GoogleOAuthProvider clientId={process.env.GOOGLE_ID ?? ""}>
+      <Toaster />
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
   </StrictMode>
 );

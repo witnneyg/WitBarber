@@ -12,10 +12,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { api } from "@/services/api";
+
+export interface CustomJwtPayload extends JwtPayload {
+  picture: string;
+  email: string;
+  name: string;
+}
 
 export function SidebarSheet() {
-  const [data] = useState(true); // TODO: make the login and get the user
+  const [user, setUser] = useState<CustomJwtPayload | undefined>();
+
+  useEffect(() => {
+    const localStorageToken = localStorage.getItem("token");
+    if (localStorageToken) {
+      try {
+        const decoded = jwtDecode<CustomJwtPayload>(localStorageToken);
+        setUser(decoded);
+      } catch (error) {
+        console.log("Token inválido ou expirado:", error);
+        localStorage.removeItem("token");
+      }
+    }
+  }, []);
+
+  function handleLogout() {
+    setUser(undefined);
+    localStorage.removeItem("token");
+    googleLogout();
+  }
 
   return (
     <SheetContent className="overflow-y-auto">
@@ -24,17 +52,14 @@ export function SidebarSheet() {
       </SheetHeader>
 
       <div className="flex  items-center py-5 border-b border-solid gap-3 justify-between">
-        {data ? (
+        {user ? (
           <div className="flex items-center gap-2">
             <Avatar>
-              <AvatarImage
-                src="https://utfs.io/f/45331760-899c-4b4b-910e-e00babb6ed81-16q.png"
-                style={{ objectFit: "cover" }}
-              />
+              <AvatarImage src={user.picture} style={{ objectFit: "cover" }} />
             </Avatar>
             <div>
-              <p className="font-bold">Lennzy</p>
-              <p className="text-xs">lennzy@gmail.com</p>
+              <p className="font-bold">{user.name}</p>
+              <p className="text-xs">{user.email}</p>
             </div>
           </div>
         ) : (
@@ -54,10 +79,32 @@ export function SidebarSheet() {
                   </DialogDescription>
                 </DialogHeader>
 
-                <Button variant="outline" className="gap-1 font-bold">
-                  <img src="" alt="Google" />
-                  Google
-                </Button>
+                <div className="w-full flex justify-center">
+                  <GoogleLogin
+                    onSuccess={(credentialResponse) => {
+                      if (!credentialResponse.credential) return;
+                      const token = credentialResponse.credential;
+                      const decoded = jwtDecode<CustomJwtPayload>(token);
+
+                      api
+                        .post(`/auth/google`, { token })
+                        .then((response) => {
+                          setUser({
+                            ...response.data.user,
+                            picture: decoded.picture || "",
+                          });
+
+                          localStorage.setItem("token", token);
+                        })
+                        .catch((err) =>
+                          console.log(err, "erro ao criar o usuario")
+                        );
+                    }}
+                    onError={() => {
+                      alert("Login Failed");
+                    }}
+                  />
+                </div>
               </DialogContent>
             </Dialog>
           </>
@@ -98,7 +145,11 @@ export function SidebarSheet() {
       </div>
 
       <div className="py-5 flex flex-col gap-2">
-        <Button variant="ghost" className="justify-start gap-2">
+        <Button
+          variant="ghost"
+          className="justify-start gap-2"
+          onClick={() => handleLogout()}
+        >
           <LogOutIcon size="18" />
           Sair da conta
         </Button>
