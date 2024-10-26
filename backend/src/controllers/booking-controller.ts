@@ -17,7 +17,7 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
   const { serviceId, date } = req.body;
-  console.log(date);
+  console.log(req.body);
 
   const booking = await createBooking({ serviceId, date });
 
