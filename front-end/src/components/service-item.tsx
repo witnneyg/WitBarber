@@ -69,11 +69,12 @@ const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
       return false;
     }
 
-    const hasBookingOnCurrentTime = bookings.some(
-      (booking) =>
-        booking.date.getHours() === hour &&
-        booking.date.getMinutes() === minutes
-    );
+    const hasBookingOnCurrentTime = bookings.some((booking) => {
+      const bookingDate = new Date(booking.date);
+      return (
+        bookingDate.getHours() === hour && bookingDate.getMinutes() === minutes
+      );
+    });
     if (hasBookingOnCurrentTime) {
       return false;
     }
@@ -91,6 +92,7 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
     undefined
   );
   const [dayBookings, setDayBookings] = useState<Booking[]>([]);
+
   const [bookingSheetIsOpen, setBookingSheetIsOpen] = useState(false);
 
   useEffect(() => {
@@ -102,9 +104,8 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
           serviceId: service.id,
         },
       });
-
-      console.log({ bookings });
-      // setDayBookings(bookings);
+      console.log(bookings.data);
+      setDayBookings(bookings.data);
     };
     fetch();
   }, [selectedDay, service.id]);
