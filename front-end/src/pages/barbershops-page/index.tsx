@@ -29,8 +29,6 @@ export function BarbershopsPage() {
     [searchParams]
   );
 
-  console.log({ searchQuery });
-
   useEffect(() => {
     async function getBarbershopSearch() {
       try {

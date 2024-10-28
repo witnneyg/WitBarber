@@ -98,13 +98,12 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
   useEffect(() => {
     const fetch = async () => {
       if (!selectedDay) return;
-      const bookings = await api.get("booking", {
+      const bookings = await api.get("/bookings", {
         params: {
           date: selectedDay,
           serviceId: service.id,
         },
       });
-      console.log(bookings.data);
       setDayBookings(bookings.data);
     };
     fetch();
@@ -154,7 +153,7 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
     try {
       if (!selectedDate) return;
 
-      await api.post("/booking", {
+      await api.post("/bookings", {
         serviceId: service.id,
         date: selectedDate,
         userId: user?.sub,

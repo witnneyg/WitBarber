@@ -121,10 +121,12 @@ export function SidebarSheet() {
           </Link>
         </SheetClose>
 
-        <Button className="gap-2 justify-start" variant="ghost">
-          <CalendarIcon size={18} />
-          Agendamentos
-        </Button>
+        <Link to="/bookings">
+          <Button className="gap-2 justify-start" variant="ghost">
+            <CalendarIcon size={18} />
+            Agendamentos
+          </Button>
+        </Link>
       </div>
 
       <div className="py-5 flex flex-col gap-2 border-b border-solid">
