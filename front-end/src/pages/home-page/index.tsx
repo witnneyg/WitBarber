@@ -1,8 +1,8 @@
 import { BarberShopItem } from "@/components/barbershop-item";
-import { BookingItem, BookingItemProps } from "@/components/booking-item";
+import { BookingItem } from "@/components/booking-item";
 import { Button } from "@/components/ui/button";
 import { quickSearchOptions } from "@/constants/search";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "@/services/api";
 import { Title } from "@/components/title";
 import { Search } from "@/components/search";
@@ -12,14 +12,17 @@ import { Header } from "@/components/header";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-
-const user = localStorage.getItem("user");
+import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
+import { BookingDetails } from "../bookings-page";
 
 export function HomePage() {
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
-  const [confirmedBookings, setConfirmedBookings] = useState<
-    BookingItemProps[]
-  >([]);
+  const [confirmedBookings, setConfirmedBookings] = useState<BookingDetails[]>(
+    []
+  );
+  const user = useMemo(() => {
+    return getTokenFromLocalStorage();
+  }, []);
 
   useEffect(() => {
     async function getAllBarbeshop() {
@@ -37,7 +40,7 @@ export function HomePage() {
   useEffect(() => {
     async function getConfirmedBookings() {
       try {
-        const res = await api.get(`/bookings/confirmed?=userId${user}`);
+        const res = await api.get(`/bookings/confirmed?userId=${user?.sub}`);
 
         setConfirmedBookings(res.data);
       } catch (error) {
@@ -46,14 +49,14 @@ export function HomePage() {
     }
 
     getConfirmedBookings();
-  }, []);
+  }, [user]);
 
   return (
     <>
       <Header />
       <div className="p-5">
         <h2 className="text-xl font-bold">
-          Olá, {user ? user : "Seja bem vindo!"}
+          Olá, {user ? user.name : "Seja bem vindo!"}
         </h2>
         <p>
           <span className="capitalize">
@@ -100,7 +103,7 @@ export function HomePage() {
             <Title name="Agendamentos" />
 
             <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
-              {confirmedBookings.map(({ booking }) => (
+              {confirmedBookings.map((booking) => (
                 <BookingItem key={booking.id} booking={booking} />
               ))}
             </div>
