@@ -3,7 +3,7 @@ import cors from "cors";
 
 import barberRoutes from "./controllers/barber-controller";
 import barbershopsRoutes from "./controllers/barbershops-controller";
-import bookingRoutes from "./controllers/booking-controller";
+import bookingsRoutes from "./controllers/bookings-controller";
 import userRoutes from "./controllers/user-controller";
 
 const app = express();
@@ -13,7 +13,7 @@ const port = 8888;
 
 app.use("/barbershop", barberRoutes);
 app.use("/barbershops", barbershopsRoutes);
-app.use("/booking", bookingRoutes);
+app.use("/bookings", bookingsRoutes);
 app.use("/auth", userRoutes);
 
 app.listen(port, () => {
