@@ -9,6 +9,7 @@ import { BarbershopPage } from "./pages/barbershop-page/index.tsx";
 import { Toaster } from "sonner";
 import { BarbershopsPage } from "./pages/barbershops-page/index.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { BookingsPage } from "./pages/bookings-page/index.tsx";
 
 document.documentElement.classList.add("dark");
 
@@ -28,6 +29,14 @@ const router = createBrowserRouter([
       {
         path: "/barbershops",
         element: <BarbershopsPage />,
+      },
+      {
+        path: "/barbershops",
+        element: <BarbershopsPage />,
+      },
+      {
+        path: "/bookings",
+        element: <BookingsPage />,
       },
     ],
   },

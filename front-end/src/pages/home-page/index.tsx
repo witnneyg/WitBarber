@@ -1,5 +1,5 @@
 import { BarberShopItem } from "@/components/barbershop-item";
-import { BookingItem } from "@/components/booking-item";
+import { BookingItem, BookingItemProps } from "@/components/booking-item";
 import { Button } from "@/components/ui/button";
 import { quickSearchOptions } from "@/constants/search";
 import { useEffect, useState } from "react";
@@ -10,9 +10,16 @@ import { BarberShop } from "@/models/barbershop-interfaces";
 import barberBanner from "../../assets/barber-banner.png";
 import { Header } from "@/components/header";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+const user = localStorage.getItem("user");
 
 export function HomePage() {
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
+  const [confirmedBookings, setConfirmedBookings] = useState<
+    BookingItemProps[]
+  >([]);
 
   useEffect(() => {
     async function getAllBarbeshop() {
@@ -20,19 +27,43 @@ export function HomePage() {
         const res = await api.get("/barbershop");
         setBarberShops(res.data);
       } catch (error: any) {
-        console.log(error.message);
+        console.log(error);
       }
     }
 
     getAllBarbeshop();
   }, [barberShops]);
 
+  useEffect(() => {
+    async function getConfirmedBookings() {
+      try {
+        const res = await api.get(`/bookings/confirmed?=userId${user}`);
+
+        setConfirmedBookings(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getConfirmedBookings();
+  }, []);
+
   return (
     <>
       <Header />
       <div className="p-5">
-        <h2 className="text-xl font-bold">Olá, Lennzy!</h2>
-        <p>Segunda-feira, 05 de agosto.</p>
+        <h2 className="text-xl font-bold">
+          Olá, {user ? user : "Seja bem vindo!"}
+        </h2>
+        <p>
+          <span className="capitalize">
+            {format(new Date(), "EEEE, dd", { locale: ptBR })}
+          </span>
+          <span>&nbsp;de&nbsp;</span>
+          <span className="capitalize">
+            {format(new Date(), "MMMM", { locale: ptBR })}
+          </span>
+        </p>
 
         <div className="mt-6">
           <Search />
@@ -40,8 +71,8 @@ export function HomePage() {
 
         <div className="flex gap-3 my-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden">
           {quickSearchOptions.map((option) => (
-            <Link to={`barbershops?service=${option.title}`}>
-              <Button className="gap-2" variant="secondary" key={option.title}>
+            <Link to={`barbershops?service=${option.title}`} key={option.title}>
+              <Button className="gap-2" variant="secondary">
                 <img
                   src={option.imageUrl}
                   alt="Cabelo icon"
@@ -64,7 +95,17 @@ export function HomePage() {
 
         <Title name="Agendamentos" />
 
-        <BookingItem />
+        {confirmedBookings.length > 0 && (
+          <>
+            <Title name="Agendamentos" />
+
+            <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+              {confirmedBookings.map(({ booking }) => (
+                <BookingItem key={booking.id} booking={booking} />
+              ))}
+            </div>
+          </>
+        )}
 
         <Title name="Recomendados" />
 
