@@ -29,7 +29,10 @@ export function Search() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="flex gap-2">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="flex gap-2 md:h-7 lg:h-9"
+      >
         <FormField
           control={form.control}
           name="title"
@@ -39,7 +42,7 @@ export function Search() {
                 <Input
                   placeholder="Faça sua busca..."
                   {...field}
-                  className="w-full"
+                  className="w-full md:h-full"
                 />
               </FormControl>
               <FormMessage />
@@ -47,8 +50,8 @@ export function Search() {
           )}
         />
 
-        <Button type="submit">
-          <SearchIcon />
+        <Button type="submit" className="md:h-[95%]">
+          <SearchIcon size={14} />
         </Button>
       </form>
     </Form>
