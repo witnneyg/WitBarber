@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format, isFuture } from "date-fns";
 import { toast } from "sonner";
 import {
@@ -30,6 +30,7 @@ import {
 
 import map from "../assets/map.png";
 import { api } from "@/services/api";
+import { BookingDetails } from "@/pages/bookings-page";
 
 export interface BookingItemProps {
   booking: {
@@ -71,15 +72,22 @@ export interface BookingItemDeleteProps {
   onDelete?: (bookingId: string) => void;
 }
 
+export interface getBookingInfo {
+  getBookingInfo?: (booking: BookingDetails[]) => void;
+}
+
 export function BookingItem({
   booking,
   onDelete,
-}: BookingItemProps & BookingItemDeleteProps) {
+  getBookingInfo,
+}: BookingItemProps & BookingItemDeleteProps & getBookingInfo) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const {
     service: { barbershop },
   } = booking;
   const isConfirmed = isFuture(booking.date);
+
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   const handleCancelBooking = async () => {
     try {
@@ -97,8 +105,38 @@ export function BookingItem({
   };
 
   const handleSheetOpenChange = (isOpen: boolean) => {
+    if (isLargeScreen && getBookingInfo) {
+      getBookingInfo(booking as any);
+      setIsSheetOpen(false);
+      return;
+    }
     setIsSheetOpen(isOpen);
   };
+
+  const checkScreenSize = () => {
+    if (window.matchMedia("(min-width: 1024px)").matches) {
+      setIsLargeScreen(true);
+    } else {
+      setIsLargeScreen(false);
+    }
+  };
+
+  useEffect(() => {
+    checkScreenSize();
+
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isLargeScreen) {
+      setIsSheetOpen(false);
+    }
+  }, [isLargeScreen]);
+
   return (
     <Sheet open={isSheetOpen} onOpenChange={handleSheetOpenChange}>
       <SheetTrigger className="w-full min-w-[90%]">
@@ -134,7 +172,7 @@ export function BookingItem({
           </CardContent>
         </Card>
       </SheetTrigger>
-      <SheetContent className="w-[85%] overflow-y-auto">
+      <SheetContent className="w-[85%] overflow-y-auto ">
         <SheetHeader>
           <SheetTitle className="text-left">Informações da Reserva</SheetTitle>
         </SheetHeader>
