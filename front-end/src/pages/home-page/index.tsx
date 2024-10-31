@@ -76,9 +76,12 @@ export function HomePage() {
             </div>
 
             <div className="hidden md:block">
-              <Title name="Agendamentos" />
-
-              {booking && <BookingItem key={booking.id} booking={booking} />}
+              {booking && (
+                <>
+                  <Title name="Agendamentos" />
+                  <BookingItem key={booking.id} booking={booking} />
+                </>
+              )}
             </div>
           </div>
           <div className="hidden md:flex overflow-x-hidden lg:flex lg:flex-col">

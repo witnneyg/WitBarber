@@ -211,7 +211,7 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
                 </Button>
 
                 <SheetContent className="px-0 overflow-y-auto">
-                  <SheetHeader>
+                  <SheetHeader className="flex items-center">
                     <SheetTitle>Fazer Reserva</SheetTitle>
                   </SheetHeader>
 
@@ -229,17 +229,21 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
                         },
                         cell: {
                           width: "100%",
+                          height: "48px",
                         },
                         button: {
-                          width: "100%",
+                          width: "48px",
+                          height: "48px",
                         },
                         nav_button_previous: {
                           width: "32px",
                           height: "32px",
+                          border: "1px solid #ddd",
                         },
                         nav_button_next: {
                           width: "32px",
                           height: "32px",
+                          border: "1px solid #ddd",
                         },
                         caption: {
                           textTransform: "capitalize",
