@@ -79,7 +79,9 @@ export function HomePage() {
               {booking && (
                 <>
                   <Title name="Agendamentos" />
-                  <BookingItem key={booking.id} booking={booking} />
+                  <Link to="/bookings">
+                    <BookingItem key={booking.id} booking={booking} />
+                  </Link>
                 </>
               )}
             </div>
