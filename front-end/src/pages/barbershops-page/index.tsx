@@ -50,26 +50,28 @@ export function BarbershopsPage() {
   return (
     <div>
       <Header />
-      <div className="my-6 px-5">
-        <Search />
-      </div>
-      <div className="px-5">
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-          Resultados para &quot;
-          {searchQuery?.title || searchQuery?.service}
-          &quot;
-        </h2>
-        <div className="grid grid-cols-2 gap-4">
-          {barbershops &&
-            barbershops!.map((barbershop) => (
-              <BarberShopItem
-                id={barbershop.id}
-                key={barbershop.id}
-                name={barbershop.name}
-                address={barbershop.address}
-                imageUrl={barbershop.imageUrl}
-              />
-            ))}
+      <div className="md:container md:x-auto md:px-10 mb-10">
+        <div className="my-6 px-5">
+          <Search />
+        </div>
+        <div className="px-5">
+          <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+            Resultados para &quot;
+            {searchQuery?.title || searchQuery?.service}
+            &quot;
+          </h2>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 lg:grid-cols-4 lg:gap-5">
+            {barbershops &&
+              barbershops!.map((barbershop) => (
+                <BarberShopItem
+                  id={barbershop.id}
+                  key={barbershop.id}
+                  name={barbershop.name}
+                  address={barbershop.address}
+                  imageUrl={barbershop.imageUrl}
+                />
+              ))}
+          </div>
         </div>
       </div>
     </div>

@@ -73,6 +73,9 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
+    backgroundImage: {
+      bgImg: "url('./src/assets/95fbf0a84e0effba3cc15693d02a71a7.jfif')",
+    },
   },
   plugins: [require("tailwindcss-animate")],
 };

@@ -20,8 +20,12 @@ export function BarberShopItem({
   return (
     <Card className="min-w-[167px] rounded-2xl  md:min-w-[220px]">
       <CardContent className="p-0 px-1 pt-1 pb-2">
-        <div className="relative h-[159px] w-full">
-          <img src={imageUrl} alt={name} className="bg-cover rounded-2xl" />
+        <div className="relative ">
+          <img
+            src={imageUrl}
+            alt={name}
+            className="bg-cover rounded-2xl h-[160px] w-full"
+          />
 
           <Badge
             className="absolute left-2 top-2 space-x-1"
