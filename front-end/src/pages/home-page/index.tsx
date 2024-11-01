@@ -15,6 +15,13 @@ import { ptBR } from "date-fns/locale";
 import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
 import { BookingDetails } from "../bookings-page";
 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
 export function HomePage() {
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
   const [confirmedBookings, setConfirmedBookings] = useState<BookingDetails[]>(
@@ -59,7 +66,7 @@ export function HomePage() {
 
         <div className="container mx-auto p-5 md:px-12 lg:px-20 relative z-10">
           <div className="flex justify-between gap-32 md:my-11 ">
-            <div className="flex flex-col md:min-w-[310px] lg:min-w-[480px] md:mb-2 w-full">
+            <div className="flex flex-col md:min-w-[310px] lg:min-w-[200px] md:mb-2 w-full">
               <h2 className="text-xl font-bold">
                 Olá, {user ? user.name : "Seja bem vindo!"}
               </h2>
@@ -88,10 +95,16 @@ export function HomePage() {
                 )}
               </div>
             </div>
-            <div className="hidden overflow-x-hidden md:flex md:flex-col">
-              <div className="flex flex-col">
-                <Title name="Populares" />
-                <div className="flex gap-4">
+            <div className="hidden md:flex md:flex-col md:w-[222px] lg:w-full">
+              <Title name="Populares" />
+
+              <Carousel
+                opts={{
+                  align: "start",
+                }}
+                className="max-w-[460px] flex"
+              >
+                <CarouselContent className="flex gap-2 w-full ml-1">
                   {barberShops.map(({ name, address, imageUrl, id }) => (
                     <BarberShopItem
                       id={id}
@@ -101,31 +114,45 @@ export function HomePage() {
                       name={name}
                     />
                   ))}
-                </div>
-              </div>
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
             </div>
           </div>
 
-          <div className="flex gap-3 my-6 overflow-x-scroll [&::-webkit-scrollbar]:hidden md:hidden">
-            {quickSearchOptions.map((option) => (
-              <Link
-                to={`barbershops?service=${option.title}`}
-                key={option.title}
-              >
-                <Button className="gap-2" variant="secondary">
-                  <img
-                    src={option.imageUrl}
-                    alt="Cabelo icon"
-                    width={16}
-                    height={16}
-                  />
-                  {option.title}
-                </Button>
-              </Link>
-            ))}
+          <div className="flex gap-3 my-6 md:hidden">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full max-w-[860px] flex"
+            >
+              <CarouselContent className="flex gap-4 w-full ml-1">
+                {quickSearchOptions.map((option) => (
+                  <Link to={`barbershops?service=${option.title}`}>
+                    <Button className="gap-2 w-28" variant="secondary">
+                      <img
+                        src={option.imageUrl}
+                        alt="Cabelo icon"
+                        width={16}
+                        height={16}
+                      />
+                      {option.title}
+                    </Button>
+                  </Link>
+                ))}
+              </CarouselContent>
+              <div className="absolute -bottom-5 left-14">
+                <CarouselPrevious />
+              </div>
+              <div className="absolute -bottom-5 right-14">
+                <CarouselNext />
+              </div>
+            </Carousel>
           </div>
 
-          <div className="mt-6 md:hidden ">
+          <div className="mt-11 md:hidden ">
             <img
               src={barberBanner}
               alt="Agende nos melhorescom FSW Barber"
@@ -148,29 +175,59 @@ export function HomePage() {
           )}
 
           <Title name="Recomendados" />
-          <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden">
-            {barberShops.map(({ name, address, imageUrl, id }) => (
-              <BarberShopItem
-                id={id}
-                key={id}
-                address={address}
-                imageUrl={imageUrl}
-                name={name}
-              />
-            ))}
+          <div className="flex">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full flex"
+            >
+              <CarouselContent className="flex gap-2 w-full mx-1">
+                {barberShops.map(({ name, address, imageUrl, id }) => (
+                  <BarberShopItem
+                    id={id}
+                    key={id}
+                    address={address}
+                    imageUrl={imageUrl}
+                    name={name}
+                  />
+                ))}
+              </CarouselContent>
+              <div className="absolute bottom-[152px] left-16 lg:block md:bottom-[152px] md:left-0">
+                <CarouselPrevious />
+              </div>
+              <div className="absolute bottom-[152px] right-16 lg:block lg:right-0">
+                <CarouselNext />
+              </div>
+            </Carousel>
           </div>
 
           <Title name="Populares" />
-          <div className="flex gap-4 overflow-auto [&::-webkit-scrollbar]:hidden mb-10">
-            {barberShops.map(({ name, address, imageUrl, id }) => (
-              <BarberShopItem
-                id={id}
-                key={id}
-                address={address}
-                imageUrl={imageUrl}
-                name={name}
-              />
-            ))}
+          <div className="flex mb-10">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full flex"
+            >
+              <CarouselContent className="flex gap-2 w-full mx-2">
+                {barberShops.map(({ name, address, imageUrl, id }) => (
+                  <BarberShopItem
+                    id={id}
+                    key={id}
+                    address={address}
+                    imageUrl={imageUrl}
+                    name={name}
+                  />
+                ))}
+              </CarouselContent>
+              <div className="absolute bottom-[152px] left-16 lg:block md:bottom-[152px] md:left-0">
+                <CarouselPrevious />
+              </div>
+              <div className="absolute bottom-[152px] right-16 lg:block lg:right-0">
+                <CarouselNext />
+              </div>
+            </Carousel>
           </div>
         </div>
       </div>
