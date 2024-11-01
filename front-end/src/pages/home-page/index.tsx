@@ -84,19 +84,20 @@ export function HomePage() {
               )}
             </div>
           </div>
-          <div className="hidden md:flex overflow-x-hidden lg:flex lg:flex-col">
-            <Title name="Populares" />
-
-            <div className="flex">
-              {barberShops.map(({ name, address, imageUrl, id }) => (
-                <BarberShopItem
-                  id={id}
-                  key={id}
-                  address={address}
-                  imageUrl={imageUrl}
-                  name={name}
-                />
-              ))}
+          <div className="hidden overflow-x-hidden lg:flex lg:flex-col">
+            <div className="flex flex-col">
+              <Title name="Populares" />
+              <div className="flex gap-4">
+                {barberShops.map(({ name, address, imageUrl, id }) => (
+                  <BarberShopItem
+                    id={id}
+                    key={id}
+                    address={address}
+                    imageUrl={imageUrl}
+                    name={name}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>

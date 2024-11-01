@@ -1,6 +1,6 @@
 import { BookingItem } from "@/components/booking-item";
 import { Header } from "@/components/header";
-// import { PhoneItem } from "@/components/phone-item";
+import { PhoneItem } from "@/components/phone-item";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
@@ -8,6 +8,19 @@ import { api } from "@/services/api";
 import { useEffect, useMemo, useState } from "react";
 
 import map from "../../assets/map.png";
+import { BookingSummary } from "@/components/booking-summary";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export interface BookingDetails {
   id: string;
@@ -54,11 +67,7 @@ export function BookingsPage() {
     undefined
   );
 
-  console.log({ bookingInfo });
-
-  const user = useMemo(() => {
-    return getTokenFromLocalStorage();
-  }, []);
+  const user = useMemo(() => getTokenFromLocalStorage(), []);
 
   if (!user) {
     // TODO: mostrar pop-up de login
@@ -83,11 +92,37 @@ export function BookingsPage() {
     }
   }, [user?.sub]);
 
+  const handleCancelBooking = async () => {
+    if (!bookingInfo) return;
+
+    try {
+      await api.delete(`/bookings/${bookingInfo.id}`);
+      toast.success("Reserva cancelada com sucesso!");
+
+      handleDeleteBooking(bookingInfo.id);
+
+      setBookingInfo(() => {
+        const newConfirmedBookings = confirmedBookings.filter(
+          (booking) => booking.id !== bookingInfo.id
+        );
+
+        return newConfirmedBookings.length > 0
+          ? newConfirmedBookings[0]
+          : undefined;
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao cancelar reserva. Tente novamente.");
+    }
+  };
+
   function handleDeleteBooking(bookingId: string) {
     setConfirmedBookings((prev) =>
       prev.filter((booking) => booking.id !== bookingId)
     );
   }
+
+  const defaultBookingInfo = bookingInfo || confirmedBookings[0];
 
   return (
     <>
@@ -103,7 +138,7 @@ export function BookingsPage() {
               <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
                 Confirmados
               </h2>
-              <div className="lg:w-[34rem] space-y-4">
+              <div className="w-full max-w-lg lg:max-w-[38rem] space-y-4">
                 {confirmedBookings.map((booking) => (
                   <BookingItem
                     key={booking.id}
@@ -121,7 +156,7 @@ export function BookingsPage() {
                 Finalizados
               </h2>
 
-              <div className="lg:w-[34rem] space-y-4">
+              <div className="w-full max-w-lg lg:max-w-[38rem] space-y-4">
                 {concludedBookings.map((booking) => (
                   <BookingItem
                     key={booking.id}
@@ -133,29 +168,37 @@ export function BookingsPage() {
             </>
           )}
         </div>
-        {bookingInfo && (
+        {defaultBookingInfo && (
           <aside className="w-[32rem]">
             <div className="mt-[62px]">
-              <Card className="flex flex-col p-5 gap-4 ">
+              <Card className="flex flex-col p-5 gap-4">
                 <div className="relative flex h-[180px] w-full items-end">
                   <img
-                    alt={`Mapa da barbearia ${bookingInfo.service.barbershop.imageUrl}`}
+                    alt={`Mapa da barbearia ${
+                      bookingInfo?.service.barbershop.imageUrl ||
+                      confirmedBookings[0].service.barbershop.imageUrl
+                    }`}
                     src={map}
                     className="rounded-xl object-cover h-[180px] w-full"
                   />
-                  <Card className="absolute z-50 mx-5 mb-3 w-[90%] rounded-xl ">
+                  <Card className="absolute z-50 mx-5 mb-3 w-[90%] rounded-xl">
                     <CardContent className="flex items-center gap-3 px-5 py-3">
                       <Avatar>
                         <AvatarImage
-                          src={bookingInfo.service.barbershop.imageUrl}
+                          src={
+                            bookingInfo?.service.barbershop.imageUrl ||
+                            confirmedBookings[0].service.barbershop.imageUrl
+                          }
                         />
                       </Avatar>
                       <div>
                         <h3 className="font-bold">
-                          {bookingInfo.service.name}
+                          {bookingInfo?.service.name ||
+                            confirmedBookings[0].service.name}
                         </h3>
                         <p className="text-xs text-gray-300">
-                          {bookingInfo.service.barbershop.address}
+                          {bookingInfo?.service.barbershop.address ||
+                            confirmedBookings[0].service.barbershop.address}
                         </p>
                       </div>
                     </CardContent>
@@ -164,14 +207,72 @@ export function BookingsPage() {
                 <h6 className="uppercase font-semibold text-base">Sobre nós</h6>
 
                 <p className="text-gray-400 text-sm">
-                  {bookingInfo.service.barbershop.description}
+                  {bookingInfo?.service.barbershop.description ||
+                    confirmedBookings[0].service.barbershop.description}
                 </p>
 
-                <div className="border-solid border-y py-4 space-y-2  text-gray-200">
-                  {/* {bookingInfo.phones.map((phone) => (
-                <PhoneItem phone={phone} />
-              ))} */}
+                <div className="border-solid border-y py-4 space-y-2 text-gray-200">
+                  {(
+                    bookingInfo?.service.barbershop.phones ||
+                    confirmedBookings[0].service.barbershop.phones
+                  ).map((phone) => (
+                    <PhoneItem phone={phone} />
+                  ))}
                 </div>
+
+                <div className="mb-3 mt-6">
+                  <BookingSummary
+                    barbershop={
+                      bookingInfo?.service.barbershop ||
+                      confirmedBookings[0].service.barbershop
+                    }
+                    service={
+                      bookingInfo?.service || confirmedBookings[0].service
+                    }
+                    selectedDate={
+                      bookingInfo?.date || confirmedBookings[0].date
+                    }
+                  />
+                </div>
+                {confirmedBookings.some(
+                  (booking) =>
+                    booking.id === (bookingInfo?.id || confirmedBookings[0].id)
+                ) && (
+                  <Dialog>
+                    <DialogTrigger className="w-full">
+                      <Button variant="destructive" className="w-full">
+                        Cancelar Reserva
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="w-[90%]">
+                      <DialogHeader>
+                        <DialogTitle>
+                          Você deseja cancelar sua reserva?
+                        </DialogTitle>
+                        <DialogDescription>
+                          Ao cancelar, você perderá sua reserva e não poderá
+                          recuperá-la. Essa ação é irreversível.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter className="flex flex-row gap-3">
+                        <DialogClose asChild>
+                          <Button variant="secondary" className="w-full">
+                            Voltar
+                          </Button>
+                        </DialogClose>
+                        <DialogClose className="w-full">
+                          <Button
+                            variant="destructive"
+                            onClick={handleCancelBooking}
+                            className="w-full"
+                          >
+                            Confirmar
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </Card>
             </div>
           </aside>
