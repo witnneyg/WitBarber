@@ -19,11 +19,11 @@ import {
   SheetTitle,
 } from "./ui/sheet";
 import { Dialog, DialogContent } from "./ui/dialog";
-import { SignInDialog } from "./sign-in-dialog";
+import { SignInDialogAlert } from "./sign-in-dialog-alert";
 import { BookingSummary } from "./booking-summary";
 import { api } from "@/services/api";
-import { jwtDecode } from "jwt-decode";
 import { CustomJwtPayload } from "./sidebar-sheet";
+import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
 
 interface ServiceItemProps {
   service: BarberShopServices;
@@ -82,8 +82,6 @@ const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
   });
 };
 
-const token = localStorage.getItem("token");
-
 export function ServiceItem({ service, barbershop }: ServiceItemProps) {
   const [user, setUser] = useState<CustomJwtPayload | undefined>(undefined);
   const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false);
@@ -110,13 +108,9 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
   }, [selectedDay, service.id]);
 
   useEffect(() => {
-    function getUserTokenFromLocalStorage() {
-      if (!token) return;
-      const decoded = jwtDecode<CustomJwtPayload>(token);
-      setUser(decoded);
-    }
+    const decoded = getTokenFromLocalStorage();
 
-    getUserTokenFromLocalStorage();
+    if (decoded) setUser(decoded);
   }, []);
 
   const selectedDate = useMemo(() => {
@@ -304,7 +298,7 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
         onOpenChange={(open) => setSignInDialogIsOpen(open)}
       >
         <DialogContent className="w-[90%]">
-          <SignInDialog />
+          <SignInDialogAlert />
         </DialogContent>
       </Dialog>
     </>
