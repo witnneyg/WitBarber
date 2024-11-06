@@ -4,18 +4,12 @@ import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { quickSearchOptions } from "@/constants/search";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Link } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { useEffect, useState } from "react";
-import { GoogleLogin, googleLogout } from "@react-oauth/google";
-import { jwtDecode, JwtPayload } from "jwt-decode";
-import { api } from "@/services/api";
+import { googleLogout } from "@react-oauth/google";
+import { JwtPayload } from "jwt-decode";
+import { SignInDialog } from "./sign-in-dialog";
+import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
 
 export interface CustomJwtPayload extends JwtPayload {
   picture: string;
@@ -24,18 +18,15 @@ export interface CustomJwtPayload extends JwtPayload {
 }
 
 export function SidebarSheet() {
-  const [user, setUser] = useState<CustomJwtPayload | undefined>();
+  const [user, setUser] = useState<CustomJwtPayload | undefined>(undefined);
 
   useEffect(() => {
-    const localStorageToken = localStorage.getItem("token");
-    if (localStorageToken) {
-      try {
-        const decoded = jwtDecode<CustomJwtPayload>(localStorageToken);
-        setUser(decoded);
-      } catch (error) {
-        console.log("Token inválido ou expirado:", error);
-        localStorage.removeItem("token");
-      }
+    const decoded = getTokenFromLocalStorage();
+
+    if (decoded) {
+      setUser(decoded);
+    } else {
+      localStorage.removeItem("token");
     }
   }, []);
 
@@ -72,39 +63,7 @@ export function SidebarSheet() {
                 </Button>
               </DialogTrigger>
               <DialogContent className="w-[90%]">
-                <DialogHeader>
-                  <DialogTitle>Faça login na plataforma</DialogTitle>
-                  <DialogDescription>
-                    Conecte-se usando sua conta do Google.
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="w-full flex justify-center">
-                  <GoogleLogin
-                    onSuccess={(credentialResponse) => {
-                      if (!credentialResponse.credential) return;
-                      const token = credentialResponse.credential;
-                      const decoded = jwtDecode<CustomJwtPayload>(token);
-
-                      api
-                        .post(`/auth/google`, { token })
-                        .then((response) => {
-                          setUser({
-                            ...response.data.user,
-                            picture: decoded.picture || "",
-                          });
-
-                          localStorage.setItem("token", token);
-                        })
-                        .catch((err) =>
-                          console.log(err, "erro ao criar o usuario")
-                        );
-                    }}
-                    onError={() => {
-                      alert("Login Failed");
-                    }}
-                  />
-                </div>
+                <SignInDialog setUser={setUser} />
               </DialogContent>
             </Dialog>
           </>

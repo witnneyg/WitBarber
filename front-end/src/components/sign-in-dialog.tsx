@@ -1,7 +1,14 @@
-import { Button } from "./ui/button";
+import { GoogleLogin } from "@react-oauth/google";
 import { DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
+import { api } from "@/services/api";
+import { jwtDecode } from "jwt-decode";
+import { CustomJwtPayload } from "./sidebar-sheet";
 
-export function SignInDialog() {
+interface SignInDialogProps {
+  setUser: (user: any) => void;
+}
+
+export function SignInDialog({ setUser }: SignInDialogProps) {
   return (
     <>
       <DialogHeader>
@@ -11,15 +18,30 @@ export function SignInDialog() {
         </DialogDescription>
       </DialogHeader>
 
-      <Button variant="outline" className="gap-1 font-bold">
-        <img
-          alt="Fazer login com o Google"
-          src="/google.svg"
-          width={18}
-          height={18}
+      <div className="w-full flex justify-center">
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            if (!credentialResponse.credential) return;
+            const token = credentialResponse.credential;
+            const decoded = jwtDecode<CustomJwtPayload>(token);
+
+            api
+              .post(`/auth/google`, { token })
+              .then((response) => {
+                setUser({
+                  ...response.data.user,
+                  picture: decoded.picture || "",
+                });
+
+                localStorage.setItem("token", token);
+              })
+              .catch((err) => console.log(err, "erro ao criar o usuario"));
+          }}
+          onError={() => {
+            alert("Login Failed");
+          }}
         />
-        Google
-      </Button>
+      </div>
     </>
   );
 }
