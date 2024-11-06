@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { CancelBookingDialog } from "@/components/cancel-booking-dialog";
 
 import map from "../../assets/map.png";
+import { Skeleton } from "@/components/ui/skeleton";
 export interface BookingDetails {
   id: string;
   userId: string;
@@ -55,6 +56,7 @@ export function BookingsPage() {
   const [bookingInfo, setBookingInfo] = useState<BookingDetails | undefined>(
     undefined
   );
+  const [loading, setLoading] = useState(true);
 
   const user = useMemo(() => getTokenFromLocalStorage(), []);
 
@@ -68,6 +70,8 @@ export function BookingsPage() {
         setState(res.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -115,23 +119,29 @@ export function BookingsPage() {
       <div className="space-y-3 p-5 lg:container lg:mx-auto lg:px-20 mt-2 lg:space-y-4 lg:flex lg:justify-between lg:gap-4">
         <div>
           <h1 className="text-xl font-bold">Agendamentos</h1>
-          {confirmedBookings.length === 0 && concludedBookings.length === 0 && (
-            <p className="text-gray-400">Você não tem agendamentos.</p>
-          )}
+          {confirmedBookings.length === 0 &&
+            concludedBookings.length === 0 &&
+            !loading && (
+              <p className="text-gray-400">Você não tem agendamentos.</p>
+            )}
           {confirmedBookings.length > 0 && (
             <>
               <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
                 Confirmados
               </h2>
               <div className="w-full max-w-lg lg:max-w-[38rem] space-y-4">
-                {confirmedBookings.map((booking) => (
-                  <BookingItem
-                    key={booking.id}
-                    booking={booking}
-                    onDelete={handleDeleteBooking}
-                    getBookingInfo={() => setBookingInfo(booking)}
-                  />
-                ))}
+                {loading ? (
+                  <Skeleton className="w-[38rem] h-[120px]" />
+                ) : (
+                  confirmedBookings.map((booking) => (
+                    <BookingItem
+                      key={booking.id}
+                      booking={booking}
+                      onDelete={handleDeleteBooking}
+                      getBookingInfo={() => setBookingInfo(booking)}
+                    />
+                  ))
+                )}
               </div>
             </>
           )}
@@ -142,18 +152,22 @@ export function BookingsPage() {
               </h2>
 
               <div className="w-full max-w-lg lg:max-w-[38rem] space-y-4">
-                {concludedBookings.map((booking) => (
-                  <BookingItem
-                    key={booking.id}
-                    booking={booking}
-                    getBookingInfo={() => setBookingInfo(booking)}
-                  />
-                ))}
+                {loading ? (
+                  <Skeleton className="w-[38rem] h-[120px]" />
+                ) : (
+                  concludedBookings.map((booking) => (
+                    <BookingItem
+                      key={booking.id}
+                      booking={booking}
+                      getBookingInfo={() => setBookingInfo(booking)}
+                    />
+                  ))
+                )}
               </div>
             </>
           )}
         </div>
-        {defaultBookingInfo && (
+        {defaultBookingInfo ? (
           <aside className="w-[32rem]">
             <div className="mt-[62px]">
               <Card className="flex flex-col p-5 gap-4">
@@ -230,6 +244,8 @@ export function BookingsPage() {
               </Card>
             </div>
           </aside>
+        ) : (
+          <Skeleton className="w-[32rem] h-[20rem]" />
         )}
       </div>
     </>
