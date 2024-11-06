@@ -21,12 +21,16 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomePage() {
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
   const [confirmedBookings, setConfirmedBookings] = useState<BookingDetails[]>(
     []
   );
+  const [loadingShops, setLoadingShops] = useState(true);
+  const [loadingBookings, setLoadingBookings] = useState(true);
+
   const user = useMemo(() => {
     return getTokenFromLocalStorage();
   }, []);
@@ -39,6 +43,8 @@ export function HomePage() {
         setBarberShops(res.data);
       } catch (error: any) {
         console.log(error);
+      } finally {
+        setLoadingShops(false);
       }
     }
 
@@ -52,6 +58,8 @@ export function HomePage() {
         setConfirmedBookings(res.data);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoadingBookings(false);
       }
     }
 
@@ -85,13 +93,17 @@ export function HomePage() {
               </div>
 
               <div className="hidden md:block">
-                {booking && (
-                  <>
-                    <Title name="Agendamentos" />
-                    <Link to="/bookings">
-                      <BookingItem key={booking.id} booking={booking} />
-                    </Link>
-                  </>
+                {loadingBookings && user ? (
+                  <Skeleton className="hidden md:block h-[150px] w-full mt-14" />
+                ) : (
+                  booking && (
+                    <>
+                      <Title name="Agendamentos" />
+                      <Link to="/bookings">
+                        <BookingItem key={booking.id} booking={booking} />
+                      </Link>
+                    </>
+                  )
                 )}
               </div>
             </div>
@@ -105,15 +117,19 @@ export function HomePage() {
                 className="max-w-[460px] flex"
               >
                 <CarouselContent className="flex gap-2 w-full ml-1">
-                  {barberShops.map(({ name, address, imageUrl, id }) => (
-                    <BarberShopItem
-                      id={id}
-                      key={id}
-                      address={address}
-                      imageUrl={imageUrl}
-                      name={name}
-                    />
-                  ))}
+                  {loadingShops ? (
+                    <Skeleton className="h-[270px] w-screen my-2" />
+                  ) : (
+                    barberShops.map(({ name, address, imageUrl, id }) => (
+                      <BarberShopItem
+                        id={id}
+                        key={id}
+                        address={address}
+                        imageUrl={imageUrl}
+                        name={name}
+                      />
+                    ))
+                  )}
                 </CarouselContent>
                 <CarouselPrevious />
                 <CarouselNext />
@@ -153,15 +169,15 @@ export function HomePage() {
           </div>
 
           <div className="mt-11 md:hidden ">
-            <img
-              src={barberBanner}
-              alt="Agende nos melhorescom FSW Barber"
-              className="object-cover rounded-xl h-[150px] w-full"
-            />
-          </div>
-
-          <div className="md:hidden">
-            <Title name="Agendamentos" />
+            {loadingShops ? (
+              <Skeleton className="h-[150px] w-full rounded-xl" />
+            ) : (
+              <img
+                src={barberBanner}
+                alt="Agende nos melhores com FSW Barber"
+                className="object-cover rounded-xl h-[150px] w-full"
+              />
+            )}
           </div>
 
           {confirmedBookings.length > 0 && (
@@ -183,15 +199,19 @@ export function HomePage() {
               className="w-full flex"
             >
               <CarouselContent className="flex gap-2 w-full mx-1">
-                {barberShops.map(({ name, address, imageUrl, id }) => (
-                  <BarberShopItem
-                    id={id}
-                    key={id}
-                    address={address}
-                    imageUrl={imageUrl}
-                    name={name}
-                  />
-                ))}
+                {loadingShops ? (
+                  <Skeleton className="h-[270px] w-screen" />
+                ) : (
+                  barberShops.map(({ name, address, imageUrl, id }) => (
+                    <BarberShopItem
+                      id={id}
+                      key={id}
+                      address={address}
+                      imageUrl={imageUrl}
+                      name={name}
+                    />
+                  ))
+                )}
               </CarouselContent>
               <div className="absolute bottom-[152px] left-16 lg:block md:bottom-[152px] md:left-0">
                 <CarouselPrevious />
@@ -211,15 +231,19 @@ export function HomePage() {
               className="w-full flex"
             >
               <CarouselContent className="flex gap-2 w-full mx-2">
-                {barberShops.map(({ name, address, imageUrl, id }) => (
-                  <BarberShopItem
-                    id={id}
-                    key={id}
-                    address={address}
-                    imageUrl={imageUrl}
-                    name={name}
-                  />
-                ))}
+                {loadingBookings ? (
+                  <Skeleton className="h-[270px] w-screen" />
+                ) : (
+                  barberShops.map(({ name, address, imageUrl, id }) => (
+                    <BarberShopItem
+                      id={id}
+                      key={id}
+                      address={address}
+                      imageUrl={imageUrl}
+                      name={name}
+                    />
+                  ))
+                )}
               </CarouselContent>
               <div className="absolute bottom-[152px] left-16 lg:block md:bottom-[152px] md:left-0">
                 <CarouselPrevious />
