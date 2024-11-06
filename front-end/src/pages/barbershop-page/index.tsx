@@ -19,7 +19,6 @@ export function BarbershopPage() {
 
   const params = useParams();
 
-  console.log({ barbershop });
   useEffect(() => {
     async function getBarbershopById() {
       try {
