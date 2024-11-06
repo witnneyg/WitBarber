@@ -6,22 +6,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
 import { api } from "@/services/api";
 import { useEffect, useMemo, useState } from "react";
+import { BookingSummary } from "@/components/booking-summary";
+import { toast } from "sonner";
+import { CancelBookingDialog } from "@/components/cancel-booking-dialog";
 
 import map from "../../assets/map.png";
-import { BookingSummary } from "@/components/booking-summary";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
-
 export interface BookingDetails {
   id: string;
   userId: string;
@@ -68,10 +57,6 @@ export function BookingsPage() {
   );
 
   const user = useMemo(() => getTokenFromLocalStorage(), []);
-
-  if (!user) {
-    // TODO: mostrar pop-up de login
-  }
 
   useEffect(() => {
     async function fetchBookings(
@@ -238,40 +223,9 @@ export function BookingsPage() {
                   (booking) =>
                     booking.id === (bookingInfo?.id || confirmedBookings[0].id)
                 ) && (
-                  <Dialog>
-                    <DialogTrigger className="w-full">
-                      <Button variant="destructive" className="w-full">
-                        Cancelar Reserva
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="w-[90%]">
-                      <DialogHeader>
-                        <DialogTitle>
-                          Você deseja cancelar sua reserva?
-                        </DialogTitle>
-                        <DialogDescription>
-                          Ao cancelar, você perderá sua reserva e não poderá
-                          recuperá-la. Essa ação é irreversível.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className="flex flex-row gap-3">
-                        <DialogClose asChild>
-                          <Button variant="secondary" className="w-full">
-                            Voltar
-                          </Button>
-                        </DialogClose>
-                        <DialogClose className="w-full">
-                          <Button
-                            variant="destructive"
-                            onClick={handleCancelBooking}
-                            className="w-full"
-                          >
-                            Confirmar
-                          </Button>
-                        </DialogClose>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                  <CancelBookingDialog
+                    handleCancelBooking={handleCancelBooking}
+                  />
                 )}
               </Card>
             </div>
