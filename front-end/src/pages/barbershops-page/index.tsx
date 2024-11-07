@@ -1,6 +1,7 @@
 import { BarberShopItem } from "@/components/barbershop-item";
 import { Header } from "@/components/header";
 import { Search } from "@/components/search";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/services/api";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -61,7 +62,7 @@ export function BarbershopsPage() {
             &quot;
           </h2>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8 lg:grid-cols-4 lg:gap-5">
-            {barbershops &&
+            {barbershops ? (
               barbershops!.map((barbershop) => (
                 <BarberShopItem
                   id={barbershop.id}
@@ -70,7 +71,10 @@ export function BarbershopsPage() {
                   address={barbershop.address}
                   imageUrl={barbershop.imageUrl}
                 />
-              ))}
+              ))
+            ) : (
+              <Skeleton className="flex flex-1 w-[80rem] h-[280px]" />
+            )}
           </div>
         </div>
       </div>
