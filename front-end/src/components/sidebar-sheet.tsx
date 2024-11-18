@@ -89,14 +89,18 @@ export function SidebarSheet() {
       </div>
 
       <div className="py-5 flex flex-col gap-2">
-        <Button
-          variant="ghost"
-          className="justify-start gap-2"
-          onClick={() => handleLogout()}
-        >
-          <LogOutIcon size="18" />
-          Sair da conta
-        </Button>
+        {!user ? (
+          ""
+        ) : (
+          <Button
+            variant="ghost"
+            className="justify-start gap-2"
+            onClick={() => handleLogout()}
+          >
+            <LogOutIcon size="18" />
+            Sair da conta
+          </Button>
+        )}
       </div>
     </SheetContent>
   );
