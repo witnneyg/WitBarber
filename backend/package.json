@@ -4,7 +4,9 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec npx ts-node src/index.ts"
+    "dev": "nodemon --exec npx ts-node src/index.ts",
+    "start": "npx ts-node src/index.ts",
+    "build": "tsc"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
