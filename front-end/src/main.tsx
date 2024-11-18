@@ -1,47 +1,16 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { HomePage } from "./pages/home-page/index.tsx";
-import App from "./App.tsx";
+import { routes } from "./routes.tsx";
+import { Toaster } from "sonner";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { UserProvider } from "./context/user-context.tsx";
 
 import "./index.css";
-import { BarbershopPage } from "./pages/barbershop-page/index.tsx";
-import { Toaster } from "sonner";
-import { BarbershopsPage } from "./pages/barbershops-page/index.tsx";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { BookingsPage } from "./pages/bookings-page/index.tsx";
-import { UserProvider } from "./context/user-context.tsx";
 
 document.documentElement.classList.add("dark");
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
-        path: "/barbershop/:id",
-        element: <BarbershopPage />,
-      },
-      {
-        path: "/barbershops",
-        element: <BarbershopsPage />,
-      },
-      {
-        path: "/barbershops",
-        element: <BarbershopsPage />,
-      },
-      {
-        path: "/bookings",
-        element: <BookingsPage />,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(routes);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
