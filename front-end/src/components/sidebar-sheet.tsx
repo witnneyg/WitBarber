@@ -5,30 +5,13 @@ import { quickSearchOptions } from "@/constants/search";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { googleLogout } from "@react-oauth/google";
-import { JwtPayload } from "jwt-decode";
 import { SignInDialog } from "./sign-in-dialog";
-import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
-
-export interface CustomJwtPayload extends JwtPayload {
-  picture: string;
-  email: string;
-  name: string;
-}
+import { UserContext } from "@/context/user-context";
 
 export function SidebarSheet() {
-  const [user, setUser] = useState<CustomJwtPayload | undefined>(undefined);
-
-  useEffect(() => {
-    const decoded = getTokenFromLocalStorage();
-
-    if (decoded) {
-      setUser(decoded);
-    } else {
-      localStorage.removeItem("token");
-    }
-  }, []);
+  const { user, setUser } = useContext(UserContext);
 
   function handleLogout() {
     setUser(undefined);

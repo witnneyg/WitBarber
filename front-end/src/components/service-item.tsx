@@ -5,7 +5,7 @@ import {
 } from "@/models/barbershop-interfaces";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { isPast, isToday, set } from "date-fns";
 import { Calendar } from "./ui/calendar";
@@ -19,11 +19,10 @@ import {
   SheetTitle,
 } from "./ui/sheet";
 import { Dialog, DialogContent } from "./ui/dialog";
-import { SignInDialogAlert } from "./sign-in-dialog-alert";
 import { BookingSummary } from "./booking-summary";
 import { api } from "@/services/api";
-import { CustomJwtPayload } from "./sidebar-sheet";
-import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
+import { UserContext } from "@/context/user-context";
+import { SignInDialog } from "./sign-in-dialog";
 
 interface ServiceItemProps {
   service: BarberShopServices;
@@ -83,7 +82,7 @@ const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
 };
 
 export function ServiceItem({ service, barbershop }: ServiceItemProps) {
-  const [user, setUser] = useState<CustomJwtPayload | undefined>(undefined);
+  const { user, setUser } = useContext(UserContext);
   const [signInDialogIsOpen, setSignInDialogIsOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string | undefined>(
@@ -106,12 +105,6 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
     };
     fetch();
   }, [selectedDay, service.id]);
-
-  useEffect(() => {
-    const decoded = getTokenFromLocalStorage();
-
-    if (decoded) setUser(decoded);
-  }, []);
 
   const selectedDate = useMemo(() => {
     if (!selectedDay || !selectedTime) return;
@@ -298,7 +291,10 @@ export function ServiceItem({ service, barbershop }: ServiceItemProps) {
         onOpenChange={(open) => setSignInDialogIsOpen(open)}
       >
         <DialogContent className="w-[90%]">
-          <SignInDialogAlert />
+          <SignInDialog
+            setUser={setUser}
+            onClose={() => setSignInDialogIsOpen(false)}
+          />
         </DialogContent>
       </Dialog>
     </>

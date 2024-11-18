@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import { BarbershopsPage } from "./pages/barbershops-page/index.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { BookingsPage } from "./pages/bookings-page/index.tsx";
+import { UserProvider } from "./context/user-context.tsx";
 
 document.documentElement.classList.add("dark");
 
@@ -44,9 +45,11 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_ID ?? ""}>
-      <Toaster />
-      <RouterProvider router={router} />
-    </GoogleOAuthProvider>
+    <UserProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_ID ?? ""}>
+        <Toaster />
+        <RouterProvider router={router} />
+      </GoogleOAuthProvider>
+    </UserProvider>
   </StrictMode>
 );

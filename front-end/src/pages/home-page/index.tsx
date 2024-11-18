@@ -2,7 +2,7 @@ import { BarberShopItem } from "@/components/barbershop-item";
 import { BookingItem } from "@/components/booking-item";
 import { Button } from "@/components/ui/button";
 import { quickSearchOptions } from "@/constants/search";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { Title } from "@/components/title";
 import { Search } from "@/components/search";
@@ -12,7 +12,6 @@ import { Header } from "@/components/header";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
 import { BookingDetails } from "../bookings-page";
 
 import {
@@ -22,8 +21,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
+import { UserContext } from "@/context/user-context";
 
 export function HomePage() {
+  const { user } = useContext(UserContext);
+
+  console.log({ user });
+
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
   const [confirmedBookings, setConfirmedBookings] = useState<BookingDetails[]>(
     []
@@ -31,9 +35,6 @@ export function HomePage() {
   const [loadingShops, setLoadingShops] = useState(true);
   const [loadingBookings, setLoadingBookings] = useState(true);
 
-  const user = useMemo(() => {
-    return getTokenFromLocalStorage();
-  }, []);
   const booking = confirmedBookings[0];
 
   useEffect(() => {

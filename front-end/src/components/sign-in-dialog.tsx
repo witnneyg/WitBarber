@@ -2,13 +2,14 @@ import { GoogleLogin } from "@react-oauth/google";
 import { DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { api } from "@/services/api";
 import { jwtDecode } from "jwt-decode";
-import { CustomJwtPayload } from "./sidebar-sheet";
+import { CustomJwtPayload } from "@/context/user-context";
 
 interface SignInDialogProps {
-  setUser: (user: any) => void;
+  setUser: (user: CustomJwtPayload) => void;
+  onClose?: () => void;
 }
 
-export function SignInDialog({ setUser }: SignInDialogProps) {
+export function SignInDialog({ setUser, onClose }: SignInDialogProps) {
   return (
     <>
       <DialogHeader>
@@ -34,6 +35,8 @@ export function SignInDialog({ setUser }: SignInDialogProps) {
                 });
 
                 localStorage.setItem("token", token);
+
+                if (onClose) onClose();
               })
               .catch((err) => console.log(err, "erro ao criar o usuario"));
           }}

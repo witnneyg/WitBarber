@@ -3,15 +3,14 @@ import { Header } from "@/components/header";
 import { PhoneItem } from "@/components/phone-item";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { getTokenFromLocalStorage } from "@/lib/getUserFromLocalStorage";
 import { api } from "@/services/api";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BookingSummary } from "@/components/booking-summary";
 import { toast } from "sonner";
 import { CancelBookingDialog } from "@/components/cancel-booking-dialog";
-
 import map from "../../assets/map.png";
 import { Skeleton } from "@/components/ui/skeleton";
+import { UserContext } from "@/context/user-context";
 export interface BookingDetails {
   id: string;
   userId: string;
@@ -47,6 +46,7 @@ export interface BookingDetails {
 }
 
 export function BookingsPage() {
+  const { user } = useContext(UserContext);
   const [confirmedBookings, setConfirmedBookings] = useState<BookingDetails[]>(
     []
   );
@@ -57,8 +57,6 @@ export function BookingsPage() {
     undefined
   );
   const [loading, setLoading] = useState(true);
-
-  const user = useMemo(() => getTokenFromLocalStorage(), []);
 
   useEffect(() => {
     async function fetchBookings(
