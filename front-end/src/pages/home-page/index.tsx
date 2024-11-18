@@ -25,9 +25,6 @@ import { UserContext } from "@/context/user-context";
 
 export function HomePage() {
   const { user } = useContext(UserContext);
-
-  console.log({ user });
-
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
   const [confirmedBookings, setConfirmedBookings] = useState<BookingDetails[]>(
     []
