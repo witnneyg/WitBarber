@@ -138,8 +138,8 @@ export function BarbershopPage() {
             </div>
           </div>
           <div className="p-5 space-y-3 lg:py-5 lg:p-0">
-            {barbershop?.phones.map((phone) => (
-              <PhoneItem key={phone} phone={phone} />
+            {barbershop?.phones.map((phone, index) => (
+              <PhoneItem key={index} phone={phone} />
             ))}
           </div>
         </div>

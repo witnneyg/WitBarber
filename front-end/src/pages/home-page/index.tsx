@@ -27,7 +27,7 @@ export function HomePage() {
   const { user } = useContext(UserContext);
   const [barberShops, setBarberShops] = useState<BarberShop[]>([]);
   const [confirmedBookings, setConfirmedBookings] = useState<BookingDetails[]>(
-    []
+    [],
   );
   const [loadingShops, setLoadingShops] = useState(true);
   const [loadingBookings, setLoadingBookings] = useState(true);

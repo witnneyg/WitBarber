@@ -11,7 +11,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const port = process.env.PORT || 8888;
+const port = 8888;
+// const port = process.env.PORT || 8888;
 
 app.use("/barbershop", barberRoutes);
 app.use("/barbershops", barbershopsRoutes);
