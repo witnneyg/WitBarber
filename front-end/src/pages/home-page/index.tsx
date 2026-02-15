@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { BookingDetails } from "../bookings-page";
+import bgImg from "@/assets/95fbf0a84e0effba3cc15693d02a71a7.jfif";
 
 import {
   Carousel,
@@ -68,8 +69,10 @@ export function HomePage() {
     <>
       <Header />
       <div className="relative">
-        <div className="absolute top-0 left-0 w-full h-[450px] bg-cover  z-0 md:bg-bgImg filter grayscale" />
-
+        <div
+          style={{ backgroundImage: `url(${bgImg})` }}
+          className="absolute top-0 left-0 w-full h-[450px] bg-cover z-0 filter grayscale"
+        />
         <div className="container mx-auto p-5 md:px-12 lg:px-20 relative z-10">
           <div className="flex justify-between gap-32 md:my-11 ">
             <div className="flex flex-col md:min-w-[310px] lg:min-w-[200px] md:mb-2 w-full">
