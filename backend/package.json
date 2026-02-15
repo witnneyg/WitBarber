@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec npx ts-node src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc"
+    "build": "prisma generate && tsc"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
